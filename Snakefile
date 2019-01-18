@@ -110,6 +110,6 @@ rule component_sampling:
         'build-cdbg --storage-type {params.storage_type} -k {params.ksize} --pairing-mode split '
         '--results-dir {params.results_dir} '
         '--track-cdbg-components '
-        '--component-sample-size {params.sample_size}'
+        '--component-sample-size {params.sample_size} '
         '--fine-interval {params.fine_interval} --medium-interval {params.medium_interval} --coarse-interval {params.coarse_interval} '
         '-i {input.r1} {input.r2} 2> {log}'
