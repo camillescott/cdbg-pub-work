@@ -1,0 +1,25 @@
+samples:
+    Thalassiosira_weissflogii:
+        ksizes:
+            - 27
+            - 35
+            - 43
+        storage: SparseppSetStorage
+    Asterionellopsis_glacialis:
+        ksizes:
+            - 27
+            - 35
+            - 43
+        storage: SparseppSetStorage
+    Saccharomyces_cerevisiae:
+        ksizes:
+            - 27
+            - 35
+            - 43
+        storage: SparseppSetStorage
+    Danio_rerio:
+        ksizes:
+            - 43
+            - 55
+            - 67
+        storage: BitStorage -x 8e9
