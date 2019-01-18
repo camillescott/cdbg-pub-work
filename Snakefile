@@ -14,9 +14,12 @@ def result_name(analysis):
         raise ValueError()
 
 
-def results(wildcards):
+def results(type_filter=None):
     paths = []
     for sample in config['samples'].keys():
+        if type_filter is not None:
+            if config['samples'][sample]['type'] != type_filter:
+                continue
         for ksize in config['samples'][sample]['ksizes']:
             for analysis in ANALYSES:
                 paths.append('outputs/{sample}/{analysis}/{ksize}/{name}'.format(
@@ -28,7 +31,15 @@ def results(wildcards):
 
 
 rule all:
-    input: results
+    input: *results()
+
+
+rule transcriptomes:
+    input: *results(type_filter='transcriptome')
+
+
+rule genomes:
+    input: *results(type_filter='genome')
 
 
 rule trimmomatic:
@@ -42,7 +53,7 @@ rule trimmomatic:
         r1_unpaired="outputs/{sample}/left.trimmed.unpaired.fq",
         r2_unpaired="outputs/{sample}/right.trimmed.unpaired.fq"
     log:
-        "logs/trimmomatic/{sample}.log"
+        "logs/{sample}/trimmomatic/rule.log"
     params:
         # list of trimmers (see manual)
         trimmer=lambda wildcards: ["ILLUMINACLIP:data/TruSeq3-PE.fa:2:30:10",
@@ -61,8 +72,9 @@ rule node_metrics:
     input:
         r1='outputs/{sample}/left.trimmed.fq',
         r2='outputs/{sample}/right.trimmed.fq'
-    output: 'outputs/{sample}/node_metrics/{ksize}/boink.cdbg.stats.csv'
-    log: 'logs/boink-build/{sample}/node_metrics/{ksize}/rule.log'
+    output:    'outputs/{sample}/node_metrics/{ksize}/boink.cdbg.stats.csv'
+    log:       'logs/{sample}/node_metrics/{ksize}/rule.log'
+    benchmark: 'benchmarks/{sample}/node_metrics/{ksize}/benchmark.tsv'
     version: BOINK_VERSION
     params:
         results_dir     = 'outputs/{sample}/node_metrics/{ksize}/',
@@ -82,8 +94,9 @@ rule component_sampling:
     input:
         r1='outputs/{sample}/left.trimmed.fq',
         r2='outputs/{sample}/right.trimmed.fq'
-    output: 'outputs/{sample}/component_sampling/{ksize}/boink.cdbg.components.csv'
-    log: 'logs/boink-build/{sample}/component_sampling/{ksize}/rule.log'
+    output:    'outputs/{sample}/component_sampling/{ksize}/boink.cdbg.components.csv'
+    log:       'logs/{sample}/component_sampling/{ksize}/rule.log'
+    benchmark: 'benchmarks/{sample}/component_sampling/{ksize}/benchmark.tsv'
     version: BOINK_VERSION
     params:
         results_dir     = 'outputs/{sample}/component_sampling/{ksize}/',

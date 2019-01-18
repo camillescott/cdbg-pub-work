@@ -5,21 +5,33 @@ samples:
             - 35
             - 43
         storage: SparseppSetStorage
+        type: transcriptome
+        resources:
+            mem_mb: 16000
     Asterionellopsis_glacialis:
         ksizes:
             - 27
             - 35
             - 43
         storage: SparseppSetStorage
+        type: transcriptome
+        resources:
+            mem_mb: 16000
     Saccharomyces_cerevisiae:
         ksizes:
             - 27
             - 35
             - 43
         storage: SparseppSetStorage
+        type: transcriptome
+        resources:
+            mem_mb: 16000
     Danio_rerio:
         ksizes:
             - 43
             - 55
             - 67
-        storage: BitStorage -x 8e9
+        storage: BitStorage -x 4e10
+        type: genome
+        resources:
+            mem_mb: 48000
