@@ -22,11 +22,14 @@ def results(type_filter=None):
                 continue
         for ksize in config['samples'][sample]['ksizes']:
             for analysis in ANALYSES:
-                paths.append('outputs/{sample}/{analysis}/{ksize}/{name}'.format(
-                             sample   = sample,
-                             ksize    = ksize,
-                             analysis = analysis,
-                             name     = result_name(analysis)))
+                if config['samples'][sample]['type'] == 'genome' and analysis == 'node_metrics':
+                    continue
+                else:
+                    paths.append('outputs/{sample}/{analysis}/{ksize}/{name}'.format(
+                                 sample   = sample,
+                                 ksize    = ksize,
+                                 analysis = analysis,
+                                 name     = result_name(analysis)))
     return paths
 
 
@@ -79,9 +82,9 @@ rule node_metrics:
     params:
         results_dir     = 'outputs/{sample}/node_metrics/{ksize}/',
         storage_type    = lambda wildcards: config['samples'][wildcards.sample]['storage'],
-        fine_interval   = 10000,
-        medium_interval = 250000,
-        coarse_interval = 1000000,
+        fine_interval   = lambda wildcards: config['samples'][wildcards.sample]['intervals']['fine'],
+        medium_interval = lambda wildcards: config['samples'][wildcards.sample]['intervals']['medium'],
+        coarse_interval = lambda wildcards: config['samples'][wildcards.sample]['intervals']['coarse'],
         ksize           = '{ksize}'
     shell:
         'build-cdbg --storage-type {params.storage_type} -k {params.ksize} --pairing-mode split '
@@ -102,14 +105,15 @@ rule component_sampling:
         results_dir     = 'outputs/{sample}/component_sampling/{ksize}/',
         storage_type    = lambda wildcards: config['samples'][wildcards.sample]['storage'],
         sample_size     = 10000,
-        fine_interval   = 100000,
-        medium_interval = 250000,
-        coarse_interval = 1000000,
+        fine_interval   = lambda wildcards: config['samples'][wildcards.sample]['intervals']['fine'],
+        medium_interval = lambda wildcards: config['samples'][wildcards.sample]['intervals']['medium'],
+        coarse_interval = lambda wildcards: config['samples'][wildcards.sample]['intervals']['coarse'],
         ksize           = '{ksize}'
     shell:
         'build-cdbg --storage-type {params.storage_type} -k {params.ksize} --pairing-mode split '
         '--results-dir {params.results_dir} '
         '--track-cdbg-components '
+        '--track-cdbg-stats '
         '--component-sample-size {params.sample_size} '
         '--fine-interval {params.fine_interval} --medium-interval {params.medium_interval} --coarse-interval {params.coarse_interval} '
         '-i {input.r1} {input.r2} 2> {log}'

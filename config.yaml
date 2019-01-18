@@ -8,6 +8,10 @@ samples:
         type: transcriptome
         resources:
             mem_mb: 16000
+        intervals:
+            fine: 10000
+            medium: 1000000
+            coarse: 5000000
     Asterionellopsis_glacialis:
         ksizes:
             - 27
@@ -17,6 +21,10 @@ samples:
         type: transcriptome
         resources:
             mem_mb: 16000
+        intervals:
+            fine: 10000
+            medium: 1000000
+            coarse: 5000000
     Saccharomyces_cerevisiae:
         ksizes:
             - 27
@@ -26,12 +34,20 @@ samples:
         type: transcriptome
         resources:
             mem_mb: 16000
+        intervals:
+            fine: 10000
+            medium: 1000000
+            coarse: 5000000
     Danio_rerio:
         ksizes:
             - 43
             - 55
             - 67
-        storage: BitStorage -x 4e10
+        storage:  SparseppSetStorage
         type: genome
         resources:
             mem_mb: 48000
+        intervals:
+            fine: 50000
+            medium: 1000000
+            coarse: 10000000
