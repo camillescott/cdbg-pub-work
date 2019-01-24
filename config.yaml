@@ -7,11 +7,13 @@ samples:
         storage: SparseppSetStorage
         type: transcriptome
         resources:
-            mem_mb: 16000
+            mem: 16
+            hours: 4
         intervals:
             fine: 10000
             medium: 1000000
             coarse: 5000000
+        accession: SRR1300476
     Asterionellopsis_glacialis:
         ksizes:
             - 27
@@ -20,11 +22,13 @@ samples:
         storage: SparseppSetStorage
         type: transcriptome
         resources:
-            mem_mb: 16000
+            mem: 16
+            hours: 4
         intervals:
             fine: 10000
             medium: 1000000
             coarse: 5000000
+        accession: SRR1300451
     Saccharomyces_cerevisiae:
         ksizes:
             - 27
@@ -33,11 +37,13 @@ samples:
         storage: SparseppSetStorage
         type: transcriptome
         resources:
-            mem_mb: 16000
+            mem: 16
+            hours: 4
         intervals:
             fine: 10000
             medium: 1000000
             coarse: 5000000
+        accession: SRR453567
     Danio_rerio:
         ksizes:
             - 43
@@ -46,8 +52,10 @@ samples:
         storage:  SparseppSetStorage
         type: genome
         resources:
-            mem_mb: 48000
+            mem: 128
+            hours: 24
         intervals:
             fine: 50000
             medium: 1000000
             coarse: 10000000
+        accession: SRR7081557

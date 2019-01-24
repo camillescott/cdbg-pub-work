@@ -1,0 +1,10 @@
+{
+    "__default__" :
+    {
+        "account" : "ged",
+        "hours" : 4,
+		"days": 0,
+		"mem": 4,
+		"email": "cswel@ucdavis.edu"
+    }
+}
