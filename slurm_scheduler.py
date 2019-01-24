@@ -14,6 +14,14 @@ import warnings
 from snakemake.utils import read_job_properties
 
 
+def make_dir(directory):
+    """Make directory unless existing. Ignore error in the latter case."""
+    try:
+        os.makedirs(directory)
+    except OSError as exception:
+        pass
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -51,12 +59,17 @@ if __name__ == '__main__':
     cluster_param['account'] = job_properties['cluster']['account']
     cluster_param['email']   = job_properties['cluster']['email']
 
+    logdir = os.path.join(job_properties['cluster']['logdir'], job_properties['rule'])
+    make_dir(logdir)
+
     sbatch_cmd = "sbatch -A {account} --parsable -c {threads} --export=ALL "\
                  "{dependencies} "\
+                 "-o {logdir}/slurm-%j.out "\
                  "--time={days:d}-{hours:02d}:00:00 --mem={mem}g "\
                  "--mail-type=FAIL,BEGIN,END --mail-user {email} "\
                  "--job-name={name} {script}".format(script=args.jobscript,
                                                      dependencies=dependencies,
+                                                     logdir=logdir,
                                                      **cluster_param)
 
     print(sbatch_cmd, file=sys.stderr)

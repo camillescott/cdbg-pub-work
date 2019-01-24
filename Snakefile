@@ -167,4 +167,4 @@ rule component_sampling:
         '--track-cdbg-stats '
         '--component-sample-size {params.sample_size} '
         '--fine-interval {params.fine_interval} --medium-interval {params.medium_interval} --coarse-interval {params.coarse_interval} '
-        '-i {input.r1} {input.r2} 2> {log}'
+        '-i {input.r1} {input.r2} > {log} 2>&1'
