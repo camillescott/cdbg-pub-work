@@ -18,7 +18,7 @@ def make_dir(directory):
     """Make directory unless existing. Ignore error in the latter case."""
     try:
         os.makedirs(directory)
-    except OSError as exception:
+    except:
         pass
 
 
