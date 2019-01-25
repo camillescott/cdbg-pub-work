@@ -1,0 +1,62 @@
+__author__ = "Camille Scott"
+__copyright__ = "Copyright 2019, Camille Scott"
+__email__ = "cswel@ucdavis.edu"
+__license__ = "BSD3"
+
+
+import os
+from snakemake.shell import shell
+
+opts = []
+if snakemake.params.get('track_cdbg_stats'):
+    opts.append('--track-cdbg-stats')
+if snakemake.params.get('track_cdbg_components'):
+    opts.append('--track-cdbg-components')
+    opts.append('--component-sample-size {0}'.format(
+                snakemake.params.get('sample_size', 10000)))
+opts.append('--results-dir {0}'.format(
+            snakemake.params.get('results_dir',
+                                 snakemake.rule + '.cdbg.results')))
+opts.append('--storage-type {0}'.format(
+            snakemake.params.get('storage_type', 'SparseppSetStorage')))
+opts.append('--fine-interval {0}'.format(
+            snakemake.params.get('fine_interval', 10000)))
+opts.append('--medium-interval {0}'.format(
+            snakemake.params.get('medium_interval', 250000)))
+opts.append('--coarse-interval {0}'.format(
+            snakemake.params.get('coarse_interval', 1000000)))
+opts.append('-k {0}'.format(
+            snakemake.params.get('ksize', 31)))
+
+if snakemake.params.get('extra'):
+    opts.append(snakemake.params.get('extra'))
+
+
+if not hasattr(snakemake.input, 'r1'):
+    # assume single
+    opts.append('--pairing-mode single')
+    if isinstance(snakemake.input, str):
+        inputs = snakemake.input
+    else:
+        inputs = ' '.join(snakemake.input)
+else:
+    if not hasattr(snakemake.input, 'r2'):
+        raise ValueError('r1 requires r2 to also be defined as input.')
+    opts.append('--pairing-mode split')
+    if isinstance(snakemake.input.r1, str):
+        inputs = '{0} {1}'.format(snakemake.input.r1,
+                                  snakemake.input.r2)
+    else:
+        r1 = list(snakemake.input.r1)
+        r2 = list(snakemake.input.r2)
+        files = []
+        while r2:
+            files.append(r1.pop())
+            files.append(r2.pop())
+        inputs = ' '.join(files)
+
+opts = ' '.join(opts)
+log = snakemake.log_fmt_shell(stdout=True, stderr=True)
+
+shell('build-cdbg {opts} '
+      '-i {inputs} {log}')
