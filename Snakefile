@@ -114,32 +114,6 @@ rule trimmomatic:
         "0.31.0/bio/trimmomatic/pe"
 
 
-#rule node_metrics:
-#    input:
-#        r1='outputs/{sample}/left.trimmed.fq',
-#        r2='outputs/{sample}/right.trimmed.fq'
-#    output:    'outputs/{sample}/node_metrics/{ksize}/boink.cdbg.stats.csv'
-#    log:       'logs/{sample}/node_metrics/{ksize}/rule.log'
-#    benchmark: 'benchmarks/{sample}/node_metrics/{ksize}/benchmark.tsv'
-#    version: BOINK_VERSION
-#    params:
-#        results_dir     = 'outputs/{sample}/node_metrics/{ksize}/',
-#        storage_type    = lambda wildcards: config['samples'][wildcards.sample]['storage'],
-#        fine_interval   = lambda wildcards: config['samples'][wildcards.sample]['intervals']['fine'],
-#        medium_interval = lambda wildcards: config['samples'][wildcards.sample]['intervals']['medium'],
-#        coarse_interval = lambda wildcards: config['samples'][wildcards.sample]['intervals']['coarse'],
-#        ksize           = '{ksize}'
-#    resources:
-#        mem   = lambda wildcards: config['samples'][wildcards.sample]['resources']['mem'],
-#        hours = lambda wildcards: config['samples'][wildcards.sample]['resources']['hours']
-#    threads: 4
-#    shell:
-#        'build-cdbg --storage-type {params.storage_type} -k {params.ksize} --pairing-mode split '
-#        '--results-dir {params.results_dir} --track-cdbg-stats '
-#        '--fine-interval {params.fine_interval} --medium-interval {params.medium_interval} --coarse-interval {params.coarse_interval} '
-#        '-i {input.r1} {input.r2} 2> {log}'
-#
-
 rule component_sampling:
     input:
         r1='outputs/{sample}/left.trimmed.fq',
@@ -168,3 +142,27 @@ rule component_sampling:
         '--component-sample-size {params.sample_size} '
         '--fine-interval {params.fine_interval} --medium-interval {params.medium_interval} --coarse-interval {params.coarse_interval} '
         '-i {input.r1} {input.r2} > {log} 2>&1'
+
+
+rule hu_metagenome_cdbg:
+    input:  'data/Hu_metagenome/hu-genome{hu_id}.fa.cdbg_ids.reads.fa'
+    output: 'outputs/Hu_metagenome/hu-genome{hu_id}/boink.cdbg.components.csv'
+    log:    'logs/Hu_metagenome/hu-genome{hu_id}/rule.log'
+    version: BOINK_VERSION
+    params:
+        results_dir           = 'outputs/Hu_metagenome/hu-genome{hu_id}/',
+        storage_type          = lambda wildcards: config['hu_metagenome']['storage'],
+        fine_interval         = lambda wildcards: config['hu_metagenome']['intervals']['fine'],
+        medium_interval       = lambda wildcards: config['hu_metagenome']['intervals']['medium'],
+        ksize                 = 31,
+        track_cdbg_components = True,
+        track_cdbg_stats      = True
+    resources:
+        mem   = lambda wildcards: config['hu_metagenome']['resources']['mem'],
+        hours = lambda wildcards: config['hu_metagenome']['resources']['hours']
+    threads: 4
+    wrapper: 'file:wrappers/build-cdbg'
+
+
+rule hu_metagenome:
+    input: expand('outputs/Hu_metagenome/hu-genome{hu_id}/boink.cdbg.components.csv', hu_id=list(range(19, 42)))
