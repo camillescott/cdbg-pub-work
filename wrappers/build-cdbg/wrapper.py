@@ -8,15 +8,32 @@ import os
 from snakemake.shell import shell
 
 opts = []
+opts.append('--results-dir {0}'.format(
+            snakemake.params.get('results_dir',
+                                 snakemake.rule + '.cdbg.results')))
+
 if snakemake.params.get('track_cdbg_stats'):
     opts.append('--track-cdbg-stats')
 if snakemake.params.get('track_cdbg_components'):
     opts.append('--track-cdbg-components')
     opts.append('--component-sample-size {0}'.format(
                 snakemake.params.get('sample_size', 10000)))
-opts.append('--results-dir {0}'.format(
-            snakemake.params.get('results_dir',
-                                 snakemake.rule + '.cdbg.results')))
+
+if snakemake.params.get('track_unitig_bp'):
+    opts.append('--track-cdbg-unitig-bp')
+
+save_cdbg = snakemake.params.get('save_cdbg', False)
+if save_cdbg:
+    opts.append('--save-cdbg')
+    if isinstance(save_cdbg, str):
+        opts.append(save_cdbg)
+    if snakemake.params.get('save_cdbg_format'):
+        opts.append('--save-cdbg-format')
+        opts.extend(snakemake.params.get('save_cdbg_format'))
+
+if snakemake.params.get('validate'):
+    opts.append('--validate')
+
 opts.append('--storage-type {0}'.format(
             snakemake.params.get('storage_type', 'SparseppSetStorage')))
 opts.append('--fine-interval {0}'.format(

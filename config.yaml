@@ -59,14 +59,11 @@ samples:
             medium: 1000000
             coarse: 10000000
         accession: SRR7081557
+
 hu_metagenome:
     resources:
         mem: 8
-        hours: 1
-    intervals:
-        fine: 1000
-        medium: 2500
-        coarse: 10000
+        hours: 4
     type: metagenome
     storage: SparseppSetStorage
     ksizes:
