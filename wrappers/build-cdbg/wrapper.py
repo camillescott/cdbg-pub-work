@@ -22,6 +22,12 @@ if snakemake.params.get('track_cdbg_components'):
 if snakemake.params.get('track_unitig_bp'):
     opts.append('--track-cdbg-unitig-bp')
 
+normalize = snakemake.params.get('normalize', False)
+if normalize:
+    opts.append('--normalize')
+    if isinstance(normalize, int):
+        opts.append(normalize)
+
 save_cdbg = snakemake.params.get('save_cdbg', False)
 if save_cdbg:
     opts.append('--save-cdbg')
