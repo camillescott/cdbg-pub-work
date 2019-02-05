@@ -192,6 +192,29 @@ rule hu_metagenome_cdbg:
     wrapper: 'file:wrappers/build-cdbg'
 
 
+rule hu_metagenome_normalized_cdbg:
+    input:  'data/Hu_metagenome/hu-genome{hu_id}.fa.cdbg_ids.reads.shuffled.fa'
+    output: 'outputs/Hu_metagenome/normalized/hu-genome{hu_id}/boink.cdbg.components.csv'
+    log:    'logs/Hu_metagenome/normalized/hu-genome{hu_id}/rule.log'
+    version: BOINK_VERSION
+    params:
+        results_dir           = 'outputs/Hu_metagenome/normalized/hu-genome{hu_id}/',
+        storage_type          = lambda wildcards: config['hu_metagenome']['storage'],
+        fine_interval         = lambda wildcards: round(get_hu_count(wildcards.hu_id) // 100, -2),
+        medium_interval       = lambda wildcards: round(get_hu_count(wildcards.hu_id) // 25, -2),
+        coarse_interval       = lambda wildcards: round(get_hu_count(wildcards.hu_id) // 10, -2),
+        ksize                 = 31,
+        track_cdbg_components = True,
+        track_cdbg_stats      = True,
+        track_unitig_bp       = True,
+        normalize             = True
+    resources:
+        mem   = lambda wildcards: config['hu_metagenome']['resources']['mem'],
+        hours = lambda wildcards: (get_hu_count(wildcards.hu_id) // 2000000) + 1
+    threads: 4
+    wrapper: 'file:wrappers/build-cdbg'
+
+
 rule hu_metagenome_merged_cdbg:
     input:  'data/Hu_metagenome/merged.reads.fa'
     output: 'outputs/Hu_metagenome/hu-merged/boink.cdbg.components.csv'
@@ -214,6 +237,11 @@ rule hu_metagenome_merged_cdbg:
 
 rule hu_metagenome:
     input: expand('outputs/Hu_metagenome/hu-genome{hu_id}/boink.cdbg.components.csv', hu_id=list(range(19, 42)))
+
+
+rule hu_metagenome_normalized:
+    input: expand('outputs/Hu_metagenome/normalized/hu-genome{hu_id}/boink.cdbg.components.csv', hu_id=list(range(19, 42)))
+
 
 rule hu_merged:
     input: 'outputs/Hu_metagenome/hu-merged/boink.cdbg.components.csv'
