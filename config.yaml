@@ -52,8 +52,8 @@ samples:
         storage:  SparseppSetStorage
         type: genome
         resources:
-            mem: 128
-            hours: 24
+            mem: 64
+            hours: 12
         intervals:
             fine: 50000
             medium: 1000000

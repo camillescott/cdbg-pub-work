@@ -12,7 +12,7 @@ rule all:
 
 
 rule all_normalized:
-    input: *result_paths*(analyses=['boink_normalized_cdbg_stats'])
+    input: *result_paths(analyses=['boink_normalized_cdbg_stats'])
 
 
 rule transcriptomes_all:

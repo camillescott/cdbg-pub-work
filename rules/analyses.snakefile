@@ -30,19 +30,15 @@ rule boink_cdbg_stats:
         fine_interval   = lambda wildcards: config['samples'][wildcards.sample]['intervals']['fine'],
         medium_interval = lambda wildcards: config['samples'][wildcards.sample]['intervals']['medium'],
         coarse_interval = lambda wildcards: config['samples'][wildcards.sample]['intervals']['coarse'],
-        ksize           = '{ksize}'
+        ksize           = '{ksize}',
+        track_cdbg_components = True,
+        track_cdbg_stats      = True,
+        track_unitig_bp       = True
     resources:
         mem   = lambda wildcards: config['samples'][wildcards.sample]['resources']['mem'],
         hours = lambda wildcards: config['samples'][wildcards.sample]['resources']['hours']
     threads: 4
-    shell:
-        'build-cdbg --storage-type {params.storage_type} -k {params.ksize} --pairing-mode split '
-        '--results-dir {params.results_dir} '
-        '--track-cdbg-components '
-        '--track-cdbg-stats '
-        '--component-sample-size {params.sample_size} '
-        '--fine-interval {params.fine_interval} --medium-interval {params.medium_interval} --coarse-interval {params.coarse_interval} '
-        '-i {input.r1} {input.r2} > {log} 2>&1'
+    shell: 'file:wrappers/build-cdbg'
 
 
 rule boink_normalized_cdbg_stats:
@@ -61,16 +57,12 @@ rule boink_normalized_cdbg_stats:
         medium_interval = lambda wildcards: config['samples'][wildcards.sample]['intervals']['medium'],
         coarse_interval = lambda wildcards: config['samples'][wildcards.sample]['intervals']['coarse'],
         ksize           = '{ksize}',
-        normalize       = True
+        normalize       = True,
+        track_cdbg_components = True,
+        track_cdbg_stats      = True,
+        track_unitig_bp       = True
     resources:
         mem   = lambda wildcards: config['samples'][wildcards.sample]['resources']['mem'],
         hours = lambda wildcards: config['samples'][wildcards.sample]['resources']['hours']
     threads: 4
-    shell:
-        'build-cdbg --storage-type {params.storage_type} -k {params.ksize} --pairing-mode split '
-        '--results-dir {params.results_dir} '
-        '--track-cdbg-components '
-        '--track-cdbg-stats '
-        '--component-sample-size {params.sample_size} '
-        '--fine-interval {params.fine_interval} --medium-interval {params.medium_interval} --coarse-interval {params.coarse_interval} '
-        '-i {input.r1} {input.r2} > {log} 2>&1'
+    wrapper: 'file:wrappers/build-cdbg'
