@@ -1,5 +1,12 @@
 .snakemake/
 slurm-*.out
+
 data/
+benchmarks/
+logs/
+outputs/
+scratch/
+
+.ipynb_checkpoints/
 
 *.swp
