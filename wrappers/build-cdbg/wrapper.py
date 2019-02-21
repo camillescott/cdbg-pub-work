@@ -1,7 +1,7 @@
 __author__ = "Camille Scott"
 __copyright__ = "Copyright 2019, Camille Scott"
 __email__ = "cswel@ucdavis.edu"
-__license__ = "BSD3"
+__license__ = "MIT"
 
 
 import os

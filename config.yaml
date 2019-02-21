@@ -68,3 +68,14 @@ hu_metagenome:
     storage: SparseppSetStorage
     ksizes:
         - 31
+
+result_format: 'outputs/{sample}/{analysis}/{ksize}/'
+
+analyses:
+
+    boink_cdbg_stats:
+        result: 'boink.cdbg.components.csv'
+    boink_normalized_cdbg_stats:
+        result: 'boink.cdbg.components.csv'
+    bcalm:
+        result: 'unitigs.fa'
