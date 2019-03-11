@@ -25,7 +25,7 @@ if snakemake.params.get('track_unitig_bp'):
 normalize = snakemake.params.get('normalize', False)
 if normalize:
     opts.append('--normalize')
-    if isinstance(normalize, int):
+    if type(normalize) is int:
         opts.append(normalize)
 
 save_cdbg = snakemake.params.get('save_cdbg', False)
@@ -78,6 +78,7 @@ else:
             files.append(r2.pop())
         inputs = ' '.join(files)
 
+print(opts)
 opts = ' '.join(opts)
 log = snakemake.log_fmt_shell(stdout=True, stderr=True)
 
