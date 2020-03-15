@@ -38,7 +38,7 @@ rule boink_cdbg_stats:
         mem   = lambda wildcards: config['samples'][wildcards.sample]['resources']['mem'],
         hours = lambda wildcards: config['samples'][wildcards.sample]['resources']['hours']
     threads: 4
-    shell: 'file:wrappers/build-cdbg'
+    wrapper: 'file:wrappers/build-cdbg'
 
 
 rule boink_normalized_cdbg_stats:

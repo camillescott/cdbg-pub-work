@@ -25,8 +25,8 @@ if snakemake.params.get('track_unitig_bp'):
 normalize = snakemake.params.get('normalize', False)
 if normalize:
     opts.append('--normalize')
-    if isinstance(normalize, int):
-        opts.append(normalize)
+    if isinstance(normalize, int) and not isinstance(normalize, bool):
+        opts.append(str(normalize))
 
 save_cdbg = snakemake.params.get('save_cdbg', False)
 if save_cdbg:
@@ -40,7 +40,7 @@ if save_cdbg:
 if snakemake.params.get('validate'):
     opts.append('--validate')
 
-opts.append('--storage-type {0}'.format(
+opts.append('--storage {0}'.format(
             snakemake.params.get('storage_type', 'SparseppSetStorage')))
 opts.append('--fine-interval {0}'.format(
             snakemake.params.get('fine_interval', 10000)))
@@ -48,7 +48,7 @@ opts.append('--medium-interval {0}'.format(
             snakemake.params.get('medium_interval', 250000)))
 opts.append('--coarse-interval {0}'.format(
             snakemake.params.get('coarse_interval', 1000000)))
-opts.append('-k {0}'.format(
+opts.append('-K {0}'.format(
             snakemake.params.get('ksize', 31)))
 
 if snakemake.params.get('extra'):
@@ -78,8 +78,9 @@ else:
             files.append(r2.pop())
         inputs = ' '.join(files)
 
+print(opts)
 opts = ' '.join(opts)
 log = snakemake.log_fmt_shell(stdout=True, stderr=True)
 
-shell('build-cdbg {opts} '
+shell('boink cdbg {opts} '
       '-i {inputs} {log}')
