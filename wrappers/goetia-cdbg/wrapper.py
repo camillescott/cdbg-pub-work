@@ -82,5 +82,5 @@ print(opts)
 opts = ' '.join(opts)
 log = snakemake.log_fmt_shell(stdout=True, stderr=True)
 
-shell('boink cdbg {opts} '
+shell('goetia cdbg {opts} '
       '-i {inputs} {log}')
